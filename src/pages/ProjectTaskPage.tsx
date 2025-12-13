@@ -98,7 +98,20 @@ export default function ProjectTaskPage() {
         <>
         <div className="flex items-center justify-between">
         <div className="space-y-1">
-          <h2 className="text-xl font-semibold">{project?.name ?? ''}</h2>
+          <div className="flex items-center gap-2">
+            <h2 className="text-xl font-semibold">{project?.name ?? ''}</h2>
+            {project && (
+              <span
+                className={`inline-block px-2 py-0.5 rounded-full text-xs font-semibold ${
+                  project.status === 'Ongoing'
+                    ? 'bg-primary/10 text-primary'
+                    : 'bg-green-500/10 text-green-600 dark:text-green-400'
+                }`}
+              >
+                {project.status}
+              </span>
+            )}
+          </div>
           <p className="text-sm text-neutral-600 dark:text-neutral-300">{project?.description ?? ''}</p>
         </div>
         <div className="flex items-center gap-2">

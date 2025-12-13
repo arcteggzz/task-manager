@@ -1,45 +1,70 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import Input from '../components/Input'
-import TextArea from '../components/TextArea'
-import Button from '../components/Button'
-import { createProject } from '../lib/db'
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import Input from "../components/Input";
+import TextArea from "../components/TextArea";
+import Button from "../components/Button";
+import { createProject } from "../lib/db";
 
 export default function CreateProjectPage() {
-  const nav = useNavigate()
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
-  const [status, setStatus] = useState<'Ongoing' | 'Completed'>('Ongoing')
-  const [loading, setLoading] = useState(false)
+  const nav = useNavigate();
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [status, setStatus] = useState<"Ongoing" | "Completed">("Ongoing");
+  const [loading, setLoading] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!name) return
-    setLoading(true)
-    const p = await createProject({ name, description, status })
-    setLoading(false)
-    nav(`/project/${p.slug}`)
-  }
+    e.preventDefault();
+    if (!name) return;
+    setLoading(true);
+    const p = await createProject({ name, description, status });
+    setLoading(false);
+    nav(`/project/${p.slug}`);
+  };
 
   return (
     <div className="flex items-center justify-center">
       <form onSubmit={submit} className="w-full max-w-lg space-y-4">
         <h2 className="text-xl font-semibold">Create Project</h2>
-        <Input label="Name" value={name} onChange={e => setName(e.target.value)} required />
-        <TextArea label="Description" value={description} onChange={e => setDescription(e.target.value)} rows={4} />
+        <Input
+          label="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
+        <TextArea
+          label="Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          rows={4}
+        />
         <label className="block space-y-1">
           <span className="text-sm">Status</span>
           <select
             className="w-full px-3 py-2 rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900"
             value={status}
-            onChange={e => setStatus(e.target.value as 'Ongoing' | 'Completed')}
+            onChange={(e) =>
+              setStatus(e.target.value as "Ongoing" | "Completed")
+            }
           >
             <option value="Ongoing">Ongoing</option>
             <option value="Completed">Completed</option>
           </select>
         </label>
-        <Button type="submit" disabled={loading}>{loading ? 'Saving...' : 'Create'}</Button>
+        <div>
+          <Button type="submit" disabled={loading}>
+            {loading ? "Saving..." : "Create"}
+          </Button>
+
+          <Link to="/">
+            <Button
+              type="button"
+              className="ml-4 bg-red-600 text-white hover:bg-red-700"
+            >
+              Cancel
+            </Button>
+          </Link>
+        </div>
       </form>
     </div>
-  )
+  );
 }
