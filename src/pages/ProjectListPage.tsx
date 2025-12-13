@@ -27,7 +27,8 @@ export default function ProjectListPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold">Welcome Oghenetega, what do you want to do today?</h1>
-        <FilterDropdown
+        <div className='flex items-center space-x-4'>
+           <FilterDropdown
           options={[
             { label: 'All', value: 'All' },
             { label: 'Ongoing', value: 'Ongoing' },
@@ -36,6 +37,10 @@ export default function ProjectListPage() {
           value={filter}
           onChange={setFilter}
         />
+           <Link to="/create-project">
+            <Button className="mt-4">New Project</Button>
+          </Link>
+        </div>
       </div>
       {!isFirebaseConfigured() ? (
         <div className="text-center py-24">
