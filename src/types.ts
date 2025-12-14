@@ -9,6 +9,7 @@ export type Project = {
   ownerId: string
   status: ProjectStatus
   dateCreated: string
+  isQuickAccess: boolean
 }
 
 export type Task = {

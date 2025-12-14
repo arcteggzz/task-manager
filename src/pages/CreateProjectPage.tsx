@@ -4,6 +4,7 @@ import Input from "../components/Input";
 import TextArea from "../components/TextArea";
 import Button from "../components/Button";
 import { createProject } from "../lib/db";
+import { listProjects } from "../lib/db";
 
 export default function CreateProjectPage() {
   const nav = useNavigate();
@@ -11,12 +12,21 @@ export default function CreateProjectPage() {
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState<"Ongoing" | "Completed">("Ongoing");
   const [loading, setLoading] = useState(false);
+  const [isQuickAccess, setIsQuickAccess] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name) return;
+    if (isQuickAccess) {
+      const all = await listProjects()
+      const count = all.filter(p => p.isQuickAccess).length
+      if (count >= 4) {
+        alert("You can only have a maximum of 4 Quick Access projects.")
+        return
+      }
+    }
     setLoading(true);
-    const p = await createProject({ name, description, status });
+    const p = await createProject({ name, description, status, isQuickAccess });
     setLoading(false);
     nav(`/project/${p.slug}`);
   };
@@ -49,6 +59,14 @@ export default function CreateProjectPage() {
             <option value="Ongoing">Ongoing</option>
             <option value="Completed">Completed</option>
           </select>
+        </label>
+        <label className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            checked={isQuickAccess}
+            onChange={(e) => setIsQuickAccess(e.target.checked)}
+          />
+          <span className="text-sm">Add to Quick Access</span>
         </label>
         <div>
           <Button type="submit" disabled={loading}>

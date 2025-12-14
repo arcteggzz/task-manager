@@ -12,7 +12,7 @@ function ensureDB() {
   }
 }
 
-export async function createProject(input: { name: string; description: string; status?: ProjectStatus }) {
+export async function createProject(input: { name: string; description: string; status?: ProjectStatus; isQuickAccess?: boolean }) {
   ensureDB()
   const id = crypto.randomUUID()
   const slug = slugify(input.name)
@@ -24,7 +24,8 @@ export async function createProject(input: { name: string; description: string; 
     description: input.description,
     ownerId: OWNER_ID,
     status: input.status ?? 'Ongoing',
-    dateCreated
+    dateCreated,
+    isQuickAccess: input.isQuickAccess ?? false
   }
   await set(ref(db!, `projects/${id}`), project)
   await set(ref(db!, `slugIndex/${slug}`), id)
@@ -44,11 +45,11 @@ export async function listProjects(filter?: { status?: ProjectStatus }) {
   ensureDB()
   const snap = await get(ref(db!, 'projects'))
   const all: Project[] = snap.exists() ? Object.values(snap.val()) : []
-  if (filter?.status) return all.filter(p => p.status === filter.status)
-  return all
+  const filtered = filter?.status ? all.filter(p => p.status === filter.status) : all
+  return filtered.sort((a, b) => Date.parse(b.dateCreated) - Date.parse(a.dateCreated))
 }
 
-export async function updateProject(id: string, updates: Partial<Pick<Project, 'name' | 'description' | 'status'>>) {
+export async function updateProject(id: string, updates: Partial<Pick<Project, 'name' | 'description' | 'status' | 'isQuickAccess'>>) {
   ensureDB()
   await update(ref(db!, `projects/${id}`), updates)
 }
@@ -80,8 +81,8 @@ export async function listTasks(projectId: string, filter?: { status?: TaskStatu
   ensureDB()
   const snap = await get(ref(db!, `tasks/${projectId}`))
   const all: Task[] = snap.exists() ? Object.values(snap.val()) : []
-  if (filter?.status) return all.filter(t => t.status === filter.status)
-  return all.sort((a, b) => a.ordinalIndex - b.ordinalIndex)
+  const filtered = filter?.status ? all.filter(t => t.status === filter.status) : all
+  return filtered.sort((a, b) => Date.parse(b.dateCreated) - Date.parse(a.dateCreated))
 }
 
 export async function updateTask(projectId: string, id: string, updates: Partial<Pick<Task, 'name' | 'description' | 'status'>>) {
