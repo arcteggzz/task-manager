@@ -55,11 +55,48 @@ export default function TaskTable({ tasks, onEdit, onDelete, onToggleStatus }: P
                 </span>
               </td>
               <td className="p-3 space-x-2">
-                <Button variant="ghost" onClick={() => onEdit(t)}>Edit</Button>
-                <Button variant="ghost" onClick={() => onToggleStatus(t)}>
-                  {t.status === 'Completed' ? 'Mark Pending' : 'Mark Completed'}
-                </Button>
-                <Button variant="ghost" onClick={() => onDelete(t)}>Delete</Button>
+                <button
+                  title="Edit"
+                  aria-label="Edit task"
+                  onClick={() => onEdit(t)}
+                  className="p-2 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7f56d9" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 20h9" />
+                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
+                  </svg>
+                </button>
+                <button
+                  title={t.status === 'Completed' ? 'Mark Pending' : 'Mark Completed'}
+                  aria-label={t.status === 'Completed' ? 'Mark Pending' : 'Mark Completed'}
+                  onClick={() => onToggleStatus(t)}
+                  className="p-2 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300"
+                >
+                  {t.status === 'Completed' ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="0.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M3 12h18" />
+                      <path d="M12 3v18" />
+                    </svg>
+                  ) : (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20 6L9 17l-5-5" />
+                    </svg>
+                  )}
+                </button>
+                <button
+                  title="Delete"
+                  aria-label="Delete task"
+                  onClick={() => onDelete(t)}
+                  className="p-2 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 text-red-600 dark:text-red-400"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="3 6 5 6 21 6" />
+                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                    <path d="M10 11v6" />
+                    <path d="M14 11v6" />
+                    <path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2" />
+                  </svg>
+                </button>
               </td>
             </tr>
           ))}
