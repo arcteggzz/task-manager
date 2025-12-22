@@ -31,11 +31,23 @@ export default function ProjectTaskPage() {
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.ctrlKey && e.altKey && e.key.toLowerCase() === 'n') {
+      const key = e.key.toLowerCase()
+      if (e.ctrlKey && e.altKey && key === 'n') {
         e.preventDefault()
         setEditing(null)
         setView('form')
         setTimeout(() => nameRef.current?.focus(), 0)
+      } else if (e.ctrlKey && e.altKey && view === 'table') {
+        if (key === 'p') {
+          e.preventDefault()
+          setFilter('Pending')
+        } else if (key === 'a') {
+          e.preventDefault()
+          setFilter('All')
+        } else if (key === 'c') {
+          e.preventDefault()
+          setFilter('Completed')
+        }
       }
     }
     window.addEventListener('keydown', handler)
@@ -137,7 +149,19 @@ export default function ProjectTaskPage() {
           <h3 className="text-lg font-semibold">{editing ? 'Edit Task' : 'Create Task'}</h3>
           <Input ref={nameRef} label="Name" required />
           <TextArea ref={descRef} label="Description" rows={4} />
-          <Button type="submit">Save</Button>
+          <div className="flex items-center gap-2">
+            <Button type="submit">Save</Button>
+            <Button
+              type="button"
+              className="bg-red-600 text-white hover:bg-red-700"
+              onClick={() => {
+                setEditing(null)
+                setView('table')
+              }}
+            >
+              Cancel
+            </Button>
+          </div>
         </form>
       )}
         </>
