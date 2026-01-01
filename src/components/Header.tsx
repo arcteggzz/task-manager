@@ -10,7 +10,7 @@ export default function Header() {
     : undefined;
 
   return (
-    <header className="flex items-center justify-between py-2">
+    <header className="flex items-center justify-between py-8">
       <div className="flex items-center gap-8">
         <Link to="/" className="text-xl font-semibold text-primary">
           Task Manager
