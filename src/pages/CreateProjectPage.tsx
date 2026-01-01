@@ -18,11 +18,11 @@ export default function CreateProjectPage() {
     e.preventDefault();
     if (!name) return;
     if (isQuickAccess) {
-      const all = await listProjects()
-      const count = all.filter(p => p.isQuickAccess).length
+      const all = await listProjects();
+      const count = all.filter((p) => p.isQuickAccess).length;
       if (count >= 4) {
-        alert("You can only have a maximum of 4 Quick Access projects.")
-        return
+        alert("You can only have a maximum of 4 Quick Access projects.");
+        return;
       }
     }
     setLoading(true);

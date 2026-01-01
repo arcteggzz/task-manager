@@ -45,19 +45,25 @@ export default function ProjectListPage() {
     e.preventDefault();
     if (!editing) return;
     if (editQuick) {
-      const count = projects.filter(pr => pr.isQuickAccess && pr.id !== editing.id).length
+      const count = projects.filter(
+        (pr) => pr.isQuickAccess && pr.id !== editing.id
+      ).length;
       if (count >= 4) {
-        alert("You can only have a maximum of 4 Quick Access projects.")
-        return
+        alert("You can only have a maximum of 4 Quick Access projects.");
+        return;
       }
     }
     await updateProject(editing.id, {
       name: editName,
       description: editDescription,
       status: editStatus,
-      isQuickAccess: editQuick
+      isQuickAccess: editQuick,
     });
-    setProjects(await listProjects(filter === "All" ? undefined : { status: filter as ProjectStatus }));
+    setProjects(
+      await listProjects(
+        filter === "All" ? undefined : { status: filter as ProjectStatus }
+      )
+    );
     setEditing(null);
   };
 
@@ -103,10 +109,28 @@ export default function ProjectListPage() {
           ))}
         </div>
       )}
-      <Modal open={!!editing} onClose={() => setEditing(null)} title="Edit Project">
+      <Modal
+        open={!!editing}
+        onClose={() => setEditing(null)}
+        title="Edit Project"
+      >
         <form onSubmit={saveEdit} className="space-y-3">
-          <Input label="Name" value={editName} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditName(e.target.value)} required />
-          <TextArea label="Description" value={editDescription} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setEditDescription(e.target.value)} rows={3} />
+          <Input
+            label="Name"
+            value={editName}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setEditName(e.target.value)
+            }
+            required
+          />
+          <TextArea
+            label="Description"
+            value={editDescription}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+              setEditDescription(e.target.value)
+            }
+            rows={3}
+          />
           <label className="block space-y-1">
             <span className="text-sm">Status</span>
             <select
@@ -119,12 +143,22 @@ export default function ProjectListPage() {
             </select>
           </label>
           <label className="flex items-center gap-2">
-            <input type="checkbox" checked={editQuick} onChange={(e) => setEditQuick(e.target.checked)} />
+            <input
+              type="checkbox"
+              checked={editQuick}
+              onChange={(e) => setEditQuick(e.target.checked)}
+            />
             <span className="text-sm">Add to Quick Access</span>
           </label>
           <div className="flex items-center gap-2 pt-2">
             <Button type="submit">Save</Button>
-            <Button type="button" variant="ghost" onClick={() => setEditing(null)}>Cancel</Button>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => setEditing(null)}
+            >
+              Cancel
+            </Button>
           </div>
         </form>
       </Modal>

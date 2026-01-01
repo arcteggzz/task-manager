@@ -94,3 +94,37 @@ export async function deleteTask(projectId: string, id: string) {
   ensureDB()
   await remove(ref(db!, `tasks/${projectId}/${id}`))
 }
+
+export async function createWeeklyAchievement(input: {
+  weekNumber: number;
+  weekStartDate: string;
+  weekEndDate: string;
+  achievements: { id: number; content: string }[];
+}) {
+  ensureDB();
+  const id = crypto.randomUUID();
+  const dateCreated = new Date().toISOString();
+  
+  // Clean undefined values from achievements if any, though type signature prevents it
+  // Ensure strict structure
+  
+  const record = {
+    id,
+    dateCreated,
+    weekNumber: input.weekNumber,
+    weekStartDate: input.weekStartDate,
+    weekEndDate: input.weekEndDate,
+    achievements: input.achievements
+  };
+  
+  await set(ref(db!, `weeklyAchievements/${id}`), record);
+  return record;
+}
+
+export async function listWeeklyAchievements() {
+  ensureDB();
+  const snap = await get(ref(db!, 'weeklyAchievements'));
+  const all = snap.exists() ? Object.values(snap.val()) : [];
+  // Sort by week number descending (newest weeks first)
+  return (all as any[]).sort((a, b) => b.weekNumber - a.weekNumber);
+}
